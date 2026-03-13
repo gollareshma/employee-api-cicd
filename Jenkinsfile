@@ -19,48 +19,33 @@ pipeline {
             }
         }
         stage('Start API & Run Tests') {
-            steps {
-                sh '''#!/bin/bash
-                . venv/bin/activate
+    steps {
+        sh '''
+        echo "Loading environment variables..."
 
-                echo "Starting Flask API..."
-                nohup python app.py > server.log 2>&1 &
-                APP_PID=$!
-                echo "Flask PID: $APP_PID"
+        export DB_HOST=$DB_HOST
+        export DB_USER=$DB_USER
+        export DB_PASSWORD=$DB_PASSWORD
+        export DB_NAME=$DB_NAME
+        export JWT_SECRET=$JWT_SECRET
+        export FLASK_ENV=production
 
-                echo "Waiting for API to become ready..."
-                for i in {1..20}; do
-                    if curl -s http://127.0.0.1:5000/health > /dev/null; then
-                        echo "API is ready!"
-                        break
-                    fi
-                    echo "Attempt $i: not ready yet..."
-                    sleep 2
-                done
+        echo "Starting Flask API..."
 
-                echo "Running tests..."
-                pytest tests/ -v
-                TEST_EXIT=$?
+        . venv/bin/activate
+        python app.py &
+        API_PID=$!
 
-                echo "Stopping API..."
-                kill $APP_PID || true
+        echo "Flask PID: $API_PID"
 
-                exit $TEST_EXIT
-                '''
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t employee-api .'
-            }
-        }
-    }
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
+        echo "Waiting for API..."
+        sleep 8
+
+        echo "Running tests..."
+        pytest tests/ -v
+
+        echo "Stopping API..."
+        kill $API_PID
+        '''
     }
 }
