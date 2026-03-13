@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from config import Config
@@ -87,6 +88,23 @@ def server_error(e):
     logger.error(f"Server error: {e}")
     return jsonify({"error": "Internal server error"}), 500
 
+=======
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Employee API is running"})
+
+@app.route('/employees')
+def employees():
+    data = [
+        {"id": 1, "name": "Alice", "role": "Developer"},
+        {"id": 2, "name": "Bob", "role": "DevOps Engineer"}
+    ]
+    return jsonify(data)
+>>>>>>> 5e834299faeb7c132b7ff092595e7d6211840acd
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
