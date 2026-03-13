@@ -6,7 +6,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/gollareshma/employee-api-cicd.git'
+                url: 'https://github.com/gollareshma/employee-api-cicd.git'
             }
         }
 
@@ -26,18 +26,19 @@ pipeline {
                 sh '''
                 . venv/bin/activate
 
-                # Start Flask app in background
-                python app.py &
+                echo "Starting Flask API..."
+
+                python app.py > server.log 2>&1 &
                 APP_PID=$!
 
-                # Wait for server to start
-                sleep 5
+                echo "Waiting for API to start..."
+                sleep 10
 
-                # Run tests
+                echo "Running tests..."
                 pytest tests/
 
-                # Stop the Flask server
-                kill $APP_PID
+                echo "Stopping Flask server..."
+                kill $APP_PID || true
                 '''
             }
         }
@@ -49,7 +50,6 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
