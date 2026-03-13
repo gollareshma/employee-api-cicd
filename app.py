@@ -107,4 +107,4 @@ def employees():
 >>>>>>> 5e834299faeb7c132b7ff092595e7d6211840acd
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=False)
