@@ -3,6 +3,7 @@ import requests
 BASE_URL = "http://127.0.0.1:5000"
 token = None
 
+
 def test_health_check():
     r = requests.get(f"{BASE_URL}/health")
     assert r.status_code == 200
@@ -39,6 +40,7 @@ def test_get_employees_with_token():
         headers={"Authorization": f"Bearer {token}"}
     )
     assert r.status_code == 200
+    assert 'employees' in r.json() 
 
 
 def test_analytics_headcount():
@@ -47,3 +49,4 @@ def test_analytics_headcount():
         headers={"Authorization": f"Bearer {token}"}
     )
     assert r.status_code == 200
+    assert isinstance(r.json(), list)   

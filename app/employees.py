@@ -14,4 +14,6 @@ def get_all_employees():
         {"id": 2, "name": "Sarah", "department": "Marketing"}
     ]
 
-    return jsonify(employees), 200
+    return jsonify({
+    "employees": employees
+}), 200

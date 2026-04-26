@@ -7,11 +7,14 @@ analytics_bp = Blueprint("analytics", __name__)
 @analytics_bp.route("/headcount", methods=["GET"])
 @token_required
 def headcount():
+    """
+    Returns department-wise headcount (CI mode)
+    """
 
-    data = {
-        "Engineering": 10,
-        "Marketing": 5,
-        "HR": 2
-    }
+    result = [
+        {"department": "Engineering", "count": 10},
+        {"department": "HR", "count": 2},
+        {"department": "Marketing", "count": 5}
+    ]
 
-    return jsonify(data), 200
+    return jsonify(result), 200
